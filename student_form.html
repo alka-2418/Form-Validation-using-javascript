@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Registration Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+    }
+    input, select {
+      width: 300px;
+      padding: 8px;
+    }
+    .error {
+      color: red;
+      font-size: 0.9em;
+    }
+    button {
+      padding: 10px 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Student Registration Form</h2>
+  <form id="registrationForm" novalidate>
+    <div class="form-group">
+      <label for="name">Full Name:</label>
+      <input type="text" id="name" />
+      <div class="error" id="nameError"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" id="email" />
+      <div class="error" id="emailError"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="contact">Contact Number:</label>
+      <input type="text" id="contact" />
+      <div class="error" id="contactError"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="address">Address:</label>
+      <input type="text" id="address" />
+      <div class="error" id="addressError"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="course">Course:</label>
+      <select id="course">
+        <option value="">-- Select Course --</option>
+        <option value="Computer Science">Computer Science</option>
+        <option value="Math">Math</option>
+        <option value="Physics">Physics</option>
+      </select>
+      <div class="error" id="courseError"></div>
+    </div>
+
+    <button type="submit" id="submitBtn" disabled>Submit</button>
+  </form>
+
+  <script>
+    const form = document.getElementById('registrationForm');
+    const submitBtn = document.getElementById('submitBtn');
+
+    const fields = {
+      name: document.getElementById('name'),
+      email: document.getElementById('email'),
+      contact: document.getElementById('contact'),
+      address: document.getElementById('address'),
+      course: document.getElementById('course')
+    };
+
+    const errors = {
+      name: document.getElementById('nameError'),
+      email: document.getElementById('emailError'),
+      contact: document.getElementById('contactError'),
+      address: document.getElementById('addressError'),
+      course: document.getElementById('courseError')
+    };
+
+    const validators = {
+      name: value => value.trim().length >= 3,
+      email: value => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value),
+      contact: value => /^[0-9]{10}$/.test(value),
+      address: value => value.trim().length > 5,
+      course: value => value !== ''
+    };
+
+    const messages = {
+      name: 'Name must be at least 3 characters.',
+      email: 'Invalid email format.',
+      contact: 'Contact must be 10 digits.',
+      address: 'Address must be at least 6 characters.',
+      course: 'Please select a course.'
+    };
+
+    function validateField(field) {
+      const value = fields[field].value;
+      const isValid = validators[field](value);
+      errors[field].textContent = isValid ? '' : messages[field];
+      return isValid;
+    }
+
+    function validateForm() {
+      let allValid = true;
+      for (const field in fields) {
+        if (!validateField(field)) {
+          allValid = false;
+        }
+      }
+      submitBtn.disabled = !allValid;
+    }
+
+    // Add event listeners
+    for (const field in fields) {
+      fields[field].addEventListener('input', () => {
+        validateField(field);
+        validateForm();
+      });
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      alert('Form submitted successfully!');
+      form.reset();
+      submitBtn.disabled = true;
+    });
+  </script>
+
+</body>
+</html>
